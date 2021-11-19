@@ -2,11 +2,14 @@ header {
   height: 90px;
   margin: 0 auto;
   padding: 20px 0;
-  text-align: center;
-  /* box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1); */
+  text-align: center;  
 }
 
 header svg {
   display: block;
   width: 100%; height: 100%;
+}
+
+.call-body > p {
+  margin: 10px 0px;
 }

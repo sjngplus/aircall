@@ -1,5 +1,6 @@
 import React from 'react'
 import Accordion from 'react-bootstrap/Accordion';
+import Button from 'react-bootstrap/Button';
 import { VscCallIncoming, VscCallOutgoing } from 'react-icons/vsc';
 
 const Activity = ({call}) => {  
@@ -12,8 +13,11 @@ const Activity = ({call}) => {
         {call.direction === "outbound" ? call.to : call.from}
       </Accordion.Header>
       <Accordion.Body>
-        <div>{call.call_type} call </div>
-        <div>{call.duration} seconds </div>
+        <div className="call-body">
+          <p>Call status: {call.call_type} call | Call Via: {call.via}</p>
+          <p>Duration: {call.duration} seconds | From: {call.from ? call.from : "N/A"}</p>
+          <p style={{marginBottom: '0px'}}><Button variant="outline-primary" size="sm">Archive</Button> </p>
+        </div>
       </Accordion.Body>
     </Accordion.Item>   
   )
