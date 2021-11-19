@@ -5,10 +5,14 @@ import Tabs from 'react-bootstrap/Tabs';
 import Activity from './Activity.jsx';
 import Archive from './Archive.jsx';
 import Accordion from 'react-bootstrap/Accordion';
+import Spinner from 'react-bootstrap/Spinner';
 
 const Header = () => {
 
+  <Spinner animation="border" variant="success" />
+
   const [ calls, setCalls ] = useState([]);
+  const [ loading, setLoading ] = useState(true);
 
   const fetchCallData = () => {
     const cancelTokenSource = axios.CancelToken.source();
@@ -18,6 +22,7 @@ const Header = () => {
     .then(res => {
       console.log(res.data);
       setCalls(res.data);
+      setLoading(false);
     })
     .catch(err =>console.log(err));
     return () => cancelTokenSource.cancel(); 
@@ -29,6 +34,7 @@ const Header = () => {
 
   const handleArchiveBtn = (callId) => {
     console.log("Requset Sent:", callId);
+    setLoading(true);
     axios.post(`https://aircall-job.herokuapp.com/activities/${callId}`, { is_archived: true} )
     .then(res => fetchCallData())
     .catch(err => console.log(err));
@@ -36,6 +42,7 @@ const Header = () => {
 
   const handleUndoArchiveBtn = (callId) => {
     console.log("Requset Sent:", callId);
+    setLoading(true);
     axios.post(`https://aircall-job.herokuapp.com/activities/${callId}`, { is_archived: false} )
     .then(res => fetchCallData())
     .catch(err => console.log(err));
@@ -69,10 +76,10 @@ const Header = () => {
 
       <Tabs defaultActiveKey="activity" className="my-3">
         <Tab eventKey="activity" title="Activity">
-          <Accordion> {parsedActivityCalls} </Accordion>
+          <Accordion> {loading ? <Spinner animation="border" variant="success"/> : parsedActivityCalls} </Accordion>
         </Tab>
         <Tab eventKey="archive" title="Archived">
-          <Accordion> {parsedArchivedCalls} </Accordion>
+          <Accordion> {loading ? <Spinner animation="border" variant="success"/> : parsedArchivedCalls} </Accordion>
         </Tab>        
       </Tabs> 
     </header>
