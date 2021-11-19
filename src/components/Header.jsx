@@ -6,7 +6,6 @@ import Activity from './Activity.jsx';
 import Archive from './Archive.jsx';
 import Accordion from 'react-bootstrap/Accordion';
 
-
 const Header = () => {
 
   const [ calls, setCalls ] = useState([]);
@@ -26,7 +25,7 @@ const Header = () => {
   }, [])
 
   const parsedActivityCalls = calls.map(call => {
-    if (!call.is_archived) return <Archive key= {call.id} call={call}/>
+    if (!call.is_archived) return <Activity key= {call.id} call={call}/>
   });
 
   const parsedArchivedCalls = calls.map(call => {
