@@ -1,24 +1,21 @@
-import React, { useEffect } from 'react'
-import axios from 'axios';
+import React from 'react'
 import Accordion from 'react-bootstrap/Accordion';
+import { VscCallIncoming, VscCallOutgoing } from 'react-icons/fa';
 
-const Activity = () => {
-
-  useEffect(() => {
-    const cancelTokenSource = axios.CancelToken.source();
-    const url = `https://aircall-job.herokuapp.com/activities`;
-    console.log("##Fetching data from API##");
-    axios.get(url, {cancelToken: cancelTokenSource.token})      
-    .then(res => console.log(res.data))
-    .catch(err =>console.log(err));
-
-    return () => cancelTokenSource.cancel(); 
-  }, [])
-
+const Activity = ({call}) => {  
   return (
-    <div>
-      Activity body
-    </div>
+    <Accordion>
+      <Accordion.Item eventKey={call.id}>
+        <Accordion.Header>
+          {call.direction === "outbound"? <VscCallOutgoing/> : <VscCallIncoming/>} 
+          {call.direction === "outbound" ? call.to : call.from}
+        </Accordion.Header>
+        <Accordion.Body>
+          <div>{call.call_type} call </div>
+          <div>{call.duration} seconds </div>
+        </Accordion.Body>
+      </Accordion.Item>
+    </Accordion>
   )
 }
 

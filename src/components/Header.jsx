@@ -1,10 +1,38 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import Activity from './Activity.jsx';
 import Archive from './Archive.jsx';
+import Accordion from 'react-bootstrap/Accordion';
+
 
 const Header = () => {
+
+  const [ calls, setCalls ] = useState([]);
+
+  useEffect(() => {
+    const cancelTokenSource = axios.CancelToken.source();
+    const url = `https://aircall-job.herokuapp.com/activities`;
+    console.log("##Fetching data from API##");
+    axios.get(url, {cancelToken: cancelTokenSource.token})      
+    .then(res => {
+      console.log(res.data);
+      setCalls(res.data);
+    })
+    .catch(err =>console.log(err));
+
+    return () => cancelTokenSource.cancel(); 
+  }, [])
+
+  const parsedActivityCalls = calls.map(call => {
+    if (!call.is_archived) return <Archive key= {call.id} call={call}/>
+  });
+
+  const parsedArchivedCalls = calls.map(call => {
+    if (call.is_archived) return <Archive key= {call.id} call={call}/>
+  });
+
   return (
     <header>      
       <svg width='486px' height='168px' viewBox='0 0 486 168' version='1.1' xmlns='http://www.w3.org/2000/svg'>
@@ -25,10 +53,10 @@ const Header = () => {
 
       <Tabs defaultActiveKey="activity" className="my-3">
         <Tab eventKey="activity" title="Activity">
-          <Activity/>
+          <Accordion> {parsedActivityCalls} </Accordion>
         </Tab>
         <Tab eventKey="archive" title="Archived">
-          <Archive/>
+          <Accordion> {parsedArchivedCalls} </Accordion>
         </Tab>        
       </Tabs> 
     </header>
