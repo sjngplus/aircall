@@ -4,10 +4,10 @@ import Button from 'react-bootstrap/Button';
 import { VscCallIncoming, VscCallOutgoing } from 'react-icons/vsc';
 import { MdAccessTime } from 'react-icons/md';
 
-const Activity = ({call}) => {
+const Activity = ({call, handleClick}) => {
 
   const parsedTime = new Date(call.created_at).toLocaleTimeString("en-US");
-  
+
   const DateOptions = { year: 'numeric', month: 'short', day: 'numeric'};
   const parsedDate = new Date(call.created_at).toLocaleDateString("en-US", DateOptions);
 
@@ -21,9 +21,9 @@ const Activity = ({call}) => {
       </Accordion.Header>
       <Accordion.Body className="px-1">
         <div className="call-body">
-          <p>Call status: {call.call_type} call | Call Date: {parsedDate}</p>
+          <p>Call status: {call.call_type} | Call Date: {parsedDate}</p>
           <p>Duration: {call.duration} seconds | From: {call.from ? call.from : "N/A"}</p>
-          <p style={{marginBottom: '0px'}}><Button variant="outline-primary" size="sm">Archive</Button> </p>
+          <p style={{marginBottom: '0px'}}><Button variant="outline-primary" size="sm" onClick={e => handleClick(call.id)}>Archive</Button> </p>
         </div>
       </Accordion.Body>
     </Accordion.Item>   

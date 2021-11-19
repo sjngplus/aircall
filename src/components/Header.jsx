@@ -10,7 +10,7 @@ const Header = () => {
 
   const [ calls, setCalls ] = useState([]);
 
-  useEffect(() => {
+  const fetchCallData = () => {
     const cancelTokenSource = axios.CancelToken.source();
     const url = `https://aircall-job.herokuapp.com/activities`;
     console.log("##Fetching data from API##");
@@ -20,16 +20,33 @@ const Header = () => {
       setCalls(res.data);
     })
     .catch(err =>console.log(err));
-
     return () => cancelTokenSource.cancel(); 
+  };
+  
+  useEffect(() => {
+    fetchCallData();
   }, [])
 
+  const handleArchiveBtn = (callId) => {
+    console.log("Requset Sent:", callId);
+    axios.post(`https://aircall-job.herokuapp.com/activities/${callId}`, { is_archived: true} )
+    .then(res => fetchCallData())
+    .catch(err => console.log(err));
+  };
+
+  const handleUndoArchiveBtn = (callId) => {
+    console.log("Requset Sent:", callId);
+    axios.post(`https://aircall-job.herokuapp.com/activities/${callId}`, { is_archived: false} )
+    .then(res => fetchCallData())
+    .catch(err => console.log(err));
+  };
+
   const parsedActivityCalls = calls.map(call => {
-    if (!call.is_archived) return <Activity key= {call.id} call={call}/>
+    if (!call.is_archived) return <Activity key= {call.id} call={call} handleClick={handleArchiveBtn}/>
   });
 
   const parsedArchivedCalls = calls.map(call => {
-    if (call.is_archived) return <Archive key= {call.id} call={call}/>
+    if (call.is_archived) return <Archive key= {call.id} call={call} handleClick={handleUndoArchiveBtn}/>
   });
 
   return (
